@@ -1,79 +1,70 @@
-const About = () => {
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function About() {
+  const containerRef = useRef(null);
+  const textRefs = useRef([]);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      // Staggered reveal for the traits as we scroll through the section
+      gsap.fromTo(
+        textRefs.current,
+        { opacity: 0, y: 100 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 75%",
+            end: "center center",
+            scrub: 1,
+          }
+        }
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section
-      id="about"
-      className="py-24 px-6"
-    >
-      <div className="max-w-7xl mx-auto">
+    <section id="about" ref={containerRef} className="py-32 md:py-44 px-6 md:px-12 w-full h-full flex flex-col justify-center items-center text-center pointer-events-none">
+      
+      <h2 
+        ref={(el) => (textRefs.current[0] = el)}
+        className="font-display font-bold tracking-tighter uppercase text-[#F4F4F0] mb-12 pointer-events-auto"
+        style={{ fontSize: "clamp(4rem, 15vw, 12rem)", lineHeight: 0.85 }}
+      >
+        ABOUT
+      </h2>
 
-        {/* Heading */}
-        <div className="mb-16">
-          <p className="text-cyan-400 font-medium mb-2">
-            Get To Know Me
-          </p>
-
-          <h2 className="text-4xl md:text-5xl font-bold">
-            About Me
-          </h2>
+      <div className="max-w-2xl mx-auto space-y-8 pointer-events-auto">
+        <p ref={(el) => (textRefs.current[1] = el)} className="font-sans text-xl md:text-3xl font-light text-[#F4F4F0] leading-relaxed">
+          I'm Vishal — <br/>
+          a creative developer and designer <br/>
+          focused on creating visually strong <br/>
+          digital experiences.
+        </p>
+        
+        <div ref={(el) => (textRefs.current[2] = el)} className="flex flex-wrap justify-center gap-4 md:gap-8 pt-8 font-sans text-xs uppercase tracking-widest text-[#888888]">
+          <span>BCA Graduate</span>
+          <span>•</span>
+          <span>Creative Developer</span>
+          <span>•</span>
+          <span>Frontend Developer</span>
+          <span>•</span>
+          <span>Web Designer</span>
         </div>
-
-        {/* About Content */}
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-
-          {/* Left Side */}
-          <div>
-            <p className="text-slate-300 leading-8 text-lg">
-              I am a BCA graduate with a strong interest in frontend
-              development and modern web technologies.
-            </p>
-
-            <p className="text-slate-400 leading-8 mt-6">
-              My experience includes building responsive web applications
-              using React.js, JavaScript, Tailwind CSS, Python, and MySQL.
-              I have also worked with Shopify stores, handling theme
-              customization, product management, and collection management.
-            </p>
-
-            <p className="text-slate-400 leading-8 mt-6">
-              I enjoy turning ideas into user-friendly digital experiences
-              and continuously improving my technical skills through
-              hands-on projects and learning.
-            </p>
-          </div>
-
-          {/* Right Side */}
-          <div className="space-y-6">
-
-            {/* Education */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-
-              <h3 className="text-xl font-semibold mb-5">
-                Education
-              </h3>
-
-              <div>
-                <h4 className="text-lg font-medium">
-                  Bachelor of Computer Applications (BCA)
-                </h4>
-
-                <p className="text-slate-400 mt-2">
-                  OM VVIM college, Morbi
-                </p>
-
-                <p className="text-cyan-400 mt-2">
-                  Graduation: 2026
-                </p>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
       </div>
+      
     </section>
   );
-};
-
-export default About;
+}

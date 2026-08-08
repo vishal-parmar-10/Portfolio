@@ -1,160 +1,86 @@
-import { motion } from "framer-motion";
-import { FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import MagneticButton from './ui/MagneticButton';
 
-const Hero = () => {
+gsap.registerPlugin(ScrollTrigger);
+
+export default function Hero() {
+  const containerRef = useRef(null);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Pin the hero and scale it down into the background as we scroll
+      gsap.to(textRef.current, {
+        scale: 0.7,
+        opacity: 0,
+        filter: 'blur(10px)',
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+          pin: true,
+          pinSpacing: false,
+        }
+      });
+    }, containerRef);
+    
+    const handleMouseMove = (e) => {
+      if (!textRef.current) return;
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      gsap.to(textRef.current, { x, y, duration: 1, ease: "power2.out" });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      ctx.revert();
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
-
-      {/* Background Grid */}
-      <div
-        className="
-          absolute inset-0
-          bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),
-          linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)]
-          bg-[size:60px_60px]
-        "
-      />
-
-      {/* Glow Effects */}
-      <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl" />
-
-      <div className="relative text-center max-w-4xl">
-
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="
-            inline-flex
-            items-center
-            gap-2
-            px-4
-            py-2
-            rounded-full
-            border
-            border-cyan-500/30
-            bg-cyan-500/10
-            text-cyan-400
-            text-sm
-            mb-6
-          "
-        >
-          Available for Opportunities
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-cyan-400"
-        >
-          Hello, I'm
-        </motion.p>
-
-        <motion.h1
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="text-5xl md:text-7xl font-bold mt-4"
-        >
-          Vishal Parmar
-        </motion.h1>
-
-        <motion.h2
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-2xl md:text-3xl font-medium text-cyan-400 mt-5"
-        >
-          Frontend Developer
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="mt-6 max-w-2xl mx-auto text-slate-400 text-lg leading-8"
-        >
-          Frontend Developer with hands-on experience in web
-          development and modern web technologies.
-          <br />
-          <br />
-          I have also worked on
-          <span className="text-white">
-            {" "}Shopify store customization
-          </span>,
-          theme management, product management, and collection setup,
-          while continuously expanding my frontend development skills.
-        </motion.p>
-
-        {/* Buttons */}
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
-
-          <a
-            href="#projects"
-            className="
-              px-7 py-3
-              bg-cyan-500
-              text-slate-950
-              font-semibold
-              rounded-xl
-              hover:scale-105
-              transition
-            "
-          >
-            View Projects
-          </a>
-
-          <a
-            href="/Vishal_Parmar_FlowCV.pdf"
-            download
-            className="
-              px-7 py-3
-              border border-slate-600
-              rounded-xl
-              hover:border-cyan-500
-              hover:text-cyan-400
-              transition
-            "
-          >
-            Download Resume
-          </a>
-
+    <section id="hero" ref={containerRef} className="relative w-full h-screen pt-24 pb-12 px-6 md:px-12 flex flex-col justify-end z-20 pointer-events-none">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full items-end h-full">
+        
+        {/* Left/Center Text */}
+        <div ref={textRef} className="col-span-1 md:col-span-9 flex flex-col justify-end h-full pointer-events-auto origin-left">
+          <p className="font-sans text-xs md:text-sm uppercase tracking-widest text-[#888888] mb-4 md:mb-6">
+            CREATIVE DEVELOPER & WEB DESIGNER
+          </p>
+          
+          <h1 className="font-display font-bold leading-[0.85] tracking-tighter text-[#F4F4F0] uppercase -ml-1 md:-ml-2 mb-8 md:mb-12" style={{ fontSize: "clamp(5rem, 12vw, 15rem)" }}>
+            VISHAL<br/>
+            PARMAR
+          </h1>
+          
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-16">
+            <p className="font-sans text-sm md:text-base text-[#888888] max-w-sm leading-relaxed">
+              I craft high-impact digital experiences, bridging visual design and modern web engineering.
+            </p>
+            
+            <MagneticButton>
+              <a href="#work" className="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#F4F4F0] hover:text-[#4DA3FF] transition-colors">
+                <span>View My Work</span>
+                <span className="w-8 h-[1px] bg-white group-hover:bg-[#4DA3FF] group-hover:w-12 transition-all duration-300"></span>
+              </a>
+            </MagneticButton>
+          </div>
         </div>
 
-        {/* Social Icons */}
-        <div className="flex justify-center gap-6 mt-8 text-2xl">
+        {/* Right side is intentionally empty for the 3D architecture to dominate */}
+        <div className="col-span-1 md:col-span-2"></div>
 
-          <a
-            href="https://github.com/vishal-parmar-10"
-            target="_blank"
-            rel="noreferrer"
-            className="text-slate-400 hover:text-cyan-400 transition"
-          >
-            <FiGithub />
-          </a>
-
-          <a
-            href="https://www.linkedin.com/in/vishal-parmar-41a098333"
-            target="_blank"
-            rel="noreferrer"
-            className="text-slate-400 hover:text-cyan-400 transition"
-          >
-            <FiLinkedin />
-          </a>
-
-          <a
-            href="mailto:vishal2408007@gmail.com"
-            className="text-slate-400 hover:text-cyan-400 transition"
-          >
-            <FiMail />
-          </a>
-
+        {/* Scroll Indicator at bottom right */}
+        <div className="col-span-1 flex justify-end md:justify-center items-end pb-4 pointer-events-auto">
+          <span className="font-sans text-[10px] uppercase tracking-widest text-[#888888] animate-bounce" style={{ writingMode: "vertical-rl" }}>
+            SCROLL
+          </span>
         </div>
-
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

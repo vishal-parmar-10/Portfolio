@@ -1,59 +1,27 @@
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import MagneticButton from "./ui/MagneticButton";
 
-const Navbar = () => {
-  const [open, setOpen] = useState(false);
-
-  const links = [
-    "About",
-    "Skills",
-    "Projects",
-    "Contact"
-  ];
-
+export default function Navbar() {
   return (
-    <nav className="fixed w-full top-0 z-50 backdrop-blur-lg bg-slate-950/70 border-b border-slate-800">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-
-        <h1 className="text-2xl font-bold text-cyan-400">
-          Vishal.
-        </h1>
-
-        <div className="hidden md:flex gap-8">
-          {links.map(link => (
-            <a
-              key={link}
-              href={`#${link.toLowerCase()}`}
-              className="hover:text-cyan-400 transition"
-            >
-              {link}
-            </a>
-          ))}
-        </div>
-
-        <button
-          className="md:hidden"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <X /> : <Menu />}
-        </button>
-
+    <header className="fixed top-0 left-0 w-full h-24 z-50 flex items-center justify-between px-6 md:px-12 border-b border-white/5 pointer-events-none mix-blend-difference text-white">
+      {/* Left: Name */}
+      <div className="font-display font-bold text-sm md:text-base tracking-tight uppercase pointer-events-auto">
+        VISHAL PARMAR
       </div>
-
-      {open && (
-        <div className="md:hidden bg-slate-900 p-5 flex flex-col gap-4">
-          {links.map(link => (
-            <a
-              key={link}
-              href={`#${link.toLowerCase()}`}
-            >
-              {link}
-            </a>
-          ))}
-        </div>
-      )}
-    </nav>
+      
+      {/* Center: Links */}
+      <div className="flex items-center gap-8 md:gap-12 pointer-events-auto">
+        <a href="#about" className="hidden md:block font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#888888] hover:text-[#F4F4F0] transition-colors">About</a>
+        <a href="#work" className="hidden md:block font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#888888] hover:text-[#F4F4F0] transition-colors">Work</a>
+        <a href="#contact" className="hidden md:block font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#888888] hover:text-[#F4F4F0] transition-colors">Contact</a>
+        
+        <MagneticButton>
+          <a href="#contact" className="group flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#F4F4F0] hover:text-[#4DA3FF] transition-colors">
+            <span>Let's Talk</span>
+            <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </a>
+        </MagneticButton>
+      </div>
+    </header>
   );
-};
-
-export default Navbar;
+}
