@@ -1,139 +1,52 @@
-import { FiMail, FiPhone, FiGithub, FiLinkedin } from "react-icons/fi";
-
-const Contact = () => {
+export default function Contact() {
   return (
     <section
       id="contact"
-      className="max-w-5xl mx-auto py-24 px-6"
+      className="w-full h-full flex flex-col justify-end pb-32 md:pb-48 px-6 md:px-12 pointer-events-none relative z-20"
     >
-      <div className="text-center">
-
-        <p className="text-cyan-400 font-medium mb-2">
-          Get In Touch
-        </p>
-
-        <h2 className="text-4xl md:text-5xl font-bold">
-          Let's Work Together
+      <div className="w-full pointer-events-auto">
+        <h2
+          className="font-display font-bold uppercase tracking-tighter text-[#F4F4F0] mb-16 leading-[0.85]"
+          style={{ fontSize: "clamp(4rem, 10vw, 10rem)" }}
+        >
+          LET'S BUILD <br />
+          SOMETHING <br />
+          <span className="text-[#888888]">INTERESTING.</span>
         </h2>
 
-        <p className="text-slate-400 mt-6 max-w-2xl mx-auto leading-8">
-          I'm currently looking for opportunities as a
-          Frontend Developer, React.js Developer, or Shopify Developer.
-          If you have a role that matches my skills,
-          I'd love to hear from you.
-        </p>
-
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6 mt-16">
-
-        {/* Email */}
-        <a
-          href="mailto:vishal2408007@gmail.com"
-          className="
-            block
-            bg-slate-900
-            border border-slate-800
-            rounded-2xl
-            p-6
-            hover:border-cyan-500
-            hover:-translate-y-1
-            transition-all
-            duration-300
-          "
-        >
-          <div className="flex items-center gap-3">
-            <FiMail className="text-cyan-400 text-xl" />
-            <span>Email</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-white/10 pt-12">
+          <div className="flex flex-col gap-4">
+            <a href="mailto:vishal2408007@gmail.com"
+              className="font-sans text-xl md:text-3xl font-light text-[#E8E8E8] hover:text-[#4DA3FF] transition-colors w-fit"
+            >
+              EMAIL
+            </a>
+            <a
+              href="https://github.com/vishal-parmar-10"
+              target="_blank"
+              rel="noreferrer"
+              className="font-sans text-xl md:text-3xl font-light text-[#E8E8E8] hover:text-[#4DA3FF] transition-colors w-fit"
+            >
+              GITHUB
+            </a>
+            <a
+              href="https://www.linkedin.com/in/vishal-parmar-41a098333/"
+              target="_blank"
+              rel="noreferrer"
+              className="font-sans text-xl md:text-3xl font-light text-[#E8E8E8] hover:text-[#4DA3FF] transition-colors w-fit"
+            >
+              LINKEDIN
+            </a>
           </div>
 
-          <p className="mt-3 text-slate-400 break-all">
-            vishal2408007@gmail.com
-          </p>
-        </a>
-
-        {/* Phone */}
-        <a
-          href="tel:+918128351850"
-          className="
-            block
-            bg-slate-900
-            border border-slate-800
-            rounded-2xl
-            p-6
-            hover:border-cyan-500
-            hover:-translate-y-1
-            transition-all
-            duration-300
-          "
-        >
-          <div className="flex items-center gap-3">
-            <FiPhone className="text-cyan-400 text-xl" />
-            <span>Phone</span>
+          <div className="flex flex-col justify-end md:text-right">
+            <p className="font-sans text-xs uppercase tracking-[0.2em] text-[#555555]">
+              AVAILABLE FOR <br />
+              FREELANCE / INTERNSHIP / FULL-TIME OPPORTUNITIES
+            </p>
           </div>
-
-          <p className="mt-3 text-slate-400">
-            +91 8128351850
-          </p>
-        </a>
-
-        {/* GitHub */}
-        <a
-          href="https://github.com/vishal-parmar-10"
-          target="_blank"
-          rel="noreferrer"
-          className="
-            block
-            bg-slate-900
-            border border-slate-800
-            rounded-2xl
-            p-6
-            hover:border-cyan-500
-            hover:-translate-y-1
-            transition-all
-            duration-300
-          "
-        >
-          <div className="flex items-center gap-3">
-            <FiGithub className="text-cyan-400 text-xl" />
-            <span>GitHub</span>
-          </div>
-
-          <p className="mt-3 text-slate-400">
-            github.com/vishal-parmar-10
-          </p>
-        </a>
-
-        {/* LinkedIn */}
-        <a
-          href="https://www.linkedin.com/in/vishal-parmar-41a098333"
-          target="_blank"
-          rel="noreferrer"
-          className="
-            block
-            bg-slate-900
-            border border-slate-800
-            rounded-2xl
-            p-6
-            hover:border-cyan-500
-            hover:-translate-y-1
-            transition-all
-            duration-300
-          "
-        >
-          <div className="flex items-center gap-3">
-            <FiLinkedin className="text-cyan-400 text-xl" />
-            <span>LinkedIn</span>
-          </div>
-
-          <p className="mt-3 text-slate-400">
-            linkedin.com/in/vishal-parmar-41a098333
-          </p>
-        </a>
-
+        </div>
       </div>
     </section>
   );
-};
-
-export default Contact;
+}

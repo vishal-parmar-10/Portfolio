@@ -1,193 +1,91 @@
-const featuredProjects = [
-  {
-    title: "Today's Best Salon",
-    description:
-      "Complete salon management and appointment booking system built with PHP and MySQL. Customers can book appointments and manage bookings, while administrators can manage services, appointments, and customer records through a dedicated dashboard.",
-    image: "/projects/Homepage.png",
-    tech: ["PHP", "MySQL", "JavaScript"],
-    github: "https://github.com/vishal-parmar-10/Today-s-Best-Salon",
-  },
-  {
-    title: "Developer Hub",
-    description:
-      "Developer-focused platform built with React.js featuring responsive design, reusable components, and modern frontend development practices.",
-    image: "/projects/devhub.png",
-    tech: ["React.js", "Tailwind CSS", "JavaScript"],
-    github: "https://github.com/vishal-parmar-10/Developer-Hub",
-  },
-  {
-    title: "Flask Blog App",
-    description:
-      "Blog management application built with Flask allowing users to create, edit, and manage articles with database integration.",
-    image: "/projects/flask-blog.png",
-    tech: ["Python", "Flask", "MySQL"],
-    github: "https://github.com/vishal-parmar-10/flask-blog-app",
-  },
-];
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { projects } from '../data/projects';
+import { ArrowUpRight } from 'lucide-react';
+import MagneticButton from './ui/MagneticButton';
 
-const otherProjects = [
-  {
-    title: "BizScout",
-    description:
-      "Business discovery tool that identifies industries and checks whether they have an online website presence.",
-  },
-  {
-    title: "Shopify Image Optimizer",
-    description:
-      "Utility tool that scans Shopify store images and converts them into optimized WebP format for improved performance.",
-  },
-];
+gsap.registerPlugin(ScrollTrigger);
 
-const Projects = () => {
+export default function Projects() {
+  const containerRef = useRef(null);
+  const metadataRefs = useRef([]);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Create a scrubbed animation for each metadata block
+      metadataRefs.current.forEach((ref, i) => {
+        
+        // We divide the total scroll height into segments for each project
+        const segmentStart = (i / projects.length) * 100;
+        const segmentEnd = ((i + 0.8) / projects.length) * 100;
+        
+        gsap.fromTo(
+          ref,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: `${segmentStart}% center`,
+              end: `${segmentEnd}% center`,
+              toggleActions: "play reverse play reverse",
+            }
+          }
+        );
+      });
+    }, containerRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section
-      id="projects"
-      className="max-w-7xl mx-auto py-24 px-6"
-    >
-      {/* Heading */}
-
-      <div className="mb-14">
-        <p className="text-cyan-400 font-medium mb-2">
-          My Work
-        </p>
-
-        <h2 className="text-4xl md:text-5xl font-bold">
-          Featured Projects
-        </h2>
-
-        <p className="text-slate-400 mt-4 max-w-2xl">
-          A collection of projects that showcase my
-          experience in frontend development, backend
-          development, database management, and problem solving.
-        </p>
-      </div>
-
-      {/* Featured Projects */}
-
-      <div className="space-y-10">
-        {featuredProjects.map((project) => (
-          <div
-            key={project.title}
-            className="
-              bg-slate-900
-              border
-              border-slate-800
-              rounded-2xl
-              overflow-hidden
-              hover:border-cyan-500
-              transition-all
-              duration-300
-            "
+    <section id="work" ref={containerRef} className="w-full h-full relative pointer-events-none">
+      {/* Sticky container that stays on screen while we scroll through the Work section */}
+      <div className="sticky top-0 w-full h-screen flex flex-col justify-center px-6 md:px-12 z-20">
+        
+        {projects.map((project, i) => (
+          <div 
+            key={project.id} 
+            ref={(el) => (metadataRefs.current[i] = el)}
+            className="absolute top-1/2 left-6 md:left-12 -translate-y-1/2 pointer-events-auto max-w-sm lg:max-w-md opacity-0"
           >
-            <div className="grid lg:grid-cols-2">
-
-              {/* Image */}
-
-              <div className="overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="
-                    w-full
-                    h-full
-                    object-cover
-                    hover:scale-105
-                    transition-transform
-                    duration-500
-                  "
-                />
-              </div>
-
-              {/* Content */}
-
-              <div className="p-8 flex flex-col justify-center">
-
-                <h3 className="text-2xl font-bold mb-4">
-                  {project.title}
-                </h3>
-
-                <p className="text-slate-400 leading-7">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-3 mt-6">
-                  {project.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className="
-                        px-3
-                        py-1
-                        bg-slate-800
-                        rounded-lg
-                        text-sm
-                        text-slate-300
-                      "
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="
-                    mt-6
-                    text-cyan-400
-                    font-medium
-                    hover:text-cyan-300
-                  "
-                >
-                  View Project →
-                </a>
-
-              </div>
-
+            <div className="font-sans text-xs uppercase tracking-[0.2em] text-[#888888] mb-4 flex items-center gap-4">
+              <span className="text-[#4DA3FF]">0{i + 1}</span>
+              <span className="w-8 h-[1px] bg-[#1A1A1A]"></span>
+              <span>{project.category}</span>
             </div>
+            
+            <h2 className="font-display font-bold text-4xl md:text-6xl text-[#F4F4F0] uppercase tracking-tighter mb-6 leading-[0.9]">
+              {project.title}
+            </h2>
+            
+            <p className="font-sans text-sm text-[#888888] mb-8 line-clamp-3 leading-relaxed">
+              {project.overview}
+            </p>
+            
+            <div className="flex flex-wrap gap-2 mb-8">
+              {project.tools.slice(0, 4).map(tool => (
+                <span key={tool} className="text-[10px] font-mono px-3 py-1.5 border border-white/5 bg-white/5 text-[#E8E8E8] uppercase rounded-sm backdrop-blur-md">
+                  {tool}
+                </span>
+              ))}
+            </div>
+            
+            <MagneticButton>
+              <a href={`#project-${project.id}`} data-cursor="project" className="group flex items-center gap-3 font-display text-xs font-bold uppercase tracking-widest text-[#F4F4F0] hover:text-[#4DA3FF] transition-colors">
+                <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#4DA3FF]/20 transition-colors pointer-events-none">
+                  <ArrowUpRight size={12} className="text-white group-hover:text-[#4DA3FF]" />
+                </span>
+                <span>View Project</span>
+              </a>
+            </MagneticButton>
           </div>
         ))}
-      </div>
-
-      {/* Other Projects */}
-
-      <div className="mt-20">
-
-        <h3 className="text-3xl font-bold mb-8">
-          Other Projects
-        </h3>
-
-        <div className="grid md:grid-cols-2 gap-6">
-
-          {otherProjects.map((project) => (
-            <div
-              key={project.title}
-              className="
-                bg-slate-900
-                border
-                border-slate-800
-                rounded-2xl
-                p-6
-                hover:border-cyan-500
-                transition-all
-              "
-            >
-              <h4 className="text-xl font-semibold mb-3">
-                {project.title}
-              </h4>
-
-              <p className="text-slate-400 leading-7">
-                {project.description}
-              </p>
-            </div>
-          ))}
-
-        </div>
 
       </div>
-
     </section>
   );
-};
-
-export default Projects;
+}
