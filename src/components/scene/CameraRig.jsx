@@ -4,22 +4,28 @@ import * as THREE from 'three';
 import { damp3 } from 'maath/easing';
 import { getSectionProgress } from '../../utils/scroll';
 
-// Camera Keyframes Timeline (Based on approved ranges)
-// 0.00 -> 0.10 : Hero
-// 0.10 -> 0.20 : Transition
-// 0.20 -> 0.35 : About
-// 0.35 -> 0.40 : Dev Space
-// 0.40 -> 0.75 : Work / Projects
-// 0.75 -> 0.88 : Skills
-// 0.88 -> 1.00 : Contact
+// Camera Keyframes Timeline (Synchronized with new HTML heights and cinematic holds)
+// Total Scroll Height ~ 1800vh (maxScroll = 1700vh)
 const cameraKeyframes = [
   { progress: 0.00, position: new THREE.Vector3(0, 0, 5) },
-  { progress: 0.10, position: new THREE.Vector3(0, 0, 5) }, // End of Hero
-  { progress: 0.20, position: new THREE.Vector3(2, 0, -5) }, // Through frame
-  { progress: 0.35, position: new THREE.Vector3(0, 0, -20) }, // End of About
-  { progress: 0.40, position: new THREE.Vector3(-2, 1, -30) }, // Dev Space
-  { progress: 0.75, position: new THREE.Vector3(0, 0, -140) }, // End of Work
-  { progress: 0.88, position: new THREE.Vector3(0, -2, -180) }, // End of Skills
+  { progress: 0.06, position: new THREE.Vector3(0, 0, 5) }, // End of Hero
+  { progress: 0.12, position: new THREE.Vector3(2, 0, -5) }, // Through transition frame
+  
+  // ABOUT - Extended Presence (Hold/Drift)
+  { progress: 0.16, position: new THREE.Vector3(0, 0, -20) }, // Arrive at About early
+  { progress: 0.26, position: new THREE.Vector3(0, 0, -21) }, // Drift slowly through About
+  
+  // DEV SPACE
+  { progress: 0.32, position: new THREE.Vector3(-2, 1, -30) }, // Dev Space
+  
+  // WORK (Continuous gallery movement)
+  { progress: 0.79, position: new THREE.Vector3(0, 0, -140) }, // End of Work gallery
+  
+  // SKILLS / EXPERIENCE - Extended Presence (Hold/Drift)
+  { progress: 0.84, position: new THREE.Vector3(0, -2, -180) }, // Arrive at Skills early
+  { progress: 0.97, position: new THREE.Vector3(0, -2, -182) }, // Drift slowly through Skills
+  
+  // CONTACT
   { progress: 1.00, position: new THREE.Vector3(0, 0, -240) } // End of Contact
 ];
 

@@ -1,11 +1,13 @@
+import React, { lazy, Suspense } from 'react';
 import { Environment } from '@react-three/drei';
 import CameraRig from './scene/CameraRig';
 import HeroScene from './scene/HeroScene';
 import TransitionFrame from './scene/TransitionFrame';
-import AboutScene from './scene/AboutScene';
-import ProjectsScene from './scene/ProjectsScene';
-import SkillsScene from './scene/SkillsScene';
-import ContactScene from './scene/ContactScene';
+
+const AboutScene = lazy(() => import('./scene/AboutScene'));
+const ProjectsScene = lazy(() => import('./scene/ProjectsScene'));
+const SkillsScene = lazy(() => import('./scene/SkillsScene'));
+const ContactScene = lazy(() => import('./scene/ContactScene'));
 
 export default function Experience() {
   return (
@@ -27,17 +29,19 @@ export default function Experience() {
         {/* Transition Frame sits between Hero and About */}
         <TransitionFrame position={[2, 0, -8]} />
         
-        {/* About space at Z=-20 */}
-        <AboutScene position={[0, 0, -20]} />
-        
-        {/* Work / Project Gallery starting at Z=-40 to -140 */}
-        <ProjectsScene position={[0, 0, 0]} />
-        
-        {/* Skills space at Z=-180 */}
-        <SkillsScene position={[0, 0, -180]} />
-        
-        {/* Contact space at Z=-240 */}
-        <ContactScene position={[0, 0, -240]} />
+        <Suspense fallback={null}>
+          {/* About space at Z=-20 */}
+          <AboutScene position={[0, 0, -20]} />
+          
+          {/* Work / Project Gallery starting at Z=-40 to -140 */}
+          <ProjectsScene position={[0, 0, 0]} />
+          
+          {/* Skills space at Z=-180 */}
+          <SkillsScene position={[0, 0, -180]} />
+          
+          {/* Contact space at Z=-240 */}
+          <ContactScene position={[0, 0, -240]} />
+        </Suspense>
       </group>
     </>
   );

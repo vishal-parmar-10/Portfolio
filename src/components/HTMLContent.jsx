@@ -1,10 +1,13 @@
+import React, { lazy, Suspense } from 'react';
 import Hero from './Hero';
-import About from './About';
-import Skills from './Skills';
-import Projects from './Projects';
-import Contact from './Contact';
-import DevSpace from './DevSpace';
 import { projects } from '../data/projects';
+
+// Lazy load below-the-fold components
+const About = lazy(() => import('./About'));
+const Skills = lazy(() => import('./Skills'));
+const Projects = lazy(() => import('./Projects'));
+const Contact = lazy(() => import('./Contact'));
+const DevSpace = lazy(() => import('./DevSpace'));
 
 export default function HTMLContent() {
   // We allocate height based on content to ensure a real semantic scroll journey.
@@ -21,8 +24,10 @@ export default function HTMLContent() {
       {/* HERO -> ABOUT TRANSITION */}
       <div className="h-screen relative pointer-events-none" />
       
+      <Suspense fallback={<div className="min-h-screen" />}>
+      
       {/* ABOUT */}
-      <div className="min-h-[120vh] relative pointer-events-none">
+      <div className="min-h-[250vh] relative pointer-events-none">
         <About />
       </div>
 
@@ -45,7 +50,7 @@ export default function HTMLContent() {
       <div className="min-h-[150vh] relative pointer-events-none flex flex-col justify-end pb-24">
         <Contact />
       </div>
-      
+      </Suspense>
     </main>
   );
 }
