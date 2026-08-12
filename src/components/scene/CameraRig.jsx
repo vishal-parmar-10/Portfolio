@@ -4,29 +4,28 @@ import * as THREE from 'three';
 import { damp3 } from 'maath/easing';
 import { getSectionProgress } from '../../utils/scroll';
 
-// Camera Keyframes Timeline (Synchronized with new HTML heights and cinematic holds)
-// Total Scroll Height ~ 1800vh (maxScroll = 1700vh)
+// Camera Keyframes
+// New total height: 2screen(hero+transition) + 200vh(about) + 1screen(devspace)
+//                  + 900vh(work=6×150) + 650vh(skills=5×130) + 150vh(contact)
+// ≈ 2200–2300vh total. Progress values tuned to match.
 const cameraKeyframes = [
-  { progress: 0.00, position: new THREE.Vector3(0, 0, 5) },
-  { progress: 0.06, position: new THREE.Vector3(0, 0, 5) }, // End of Hero
-  { progress: 0.12, position: new THREE.Vector3(2, 0, -5) }, // Through transition frame
-  
-  // ABOUT - Extended Presence (Hold/Drift)
-  { progress: 0.16, position: new THREE.Vector3(0, 0, -20) }, // Arrive at About early
-  { progress: 0.26, position: new THREE.Vector3(0, 0, -21) }, // Drift slowly through About
-  
-  // DEV SPACE
-  { progress: 0.32, position: new THREE.Vector3(-2, 1, -30) }, // Dev Space
-  
-  // WORK (Continuous gallery movement)
-  { progress: 0.79, position: new THREE.Vector3(0, 0, -140) }, // End of Work gallery
-  
-  // SKILLS / EXPERIENCE - Extended Presence (Hold/Drift)
-  { progress: 0.84, position: new THREE.Vector3(0, -2, -180) }, // Arrive at Skills early
-  { progress: 0.97, position: new THREE.Vector3(0, -2, -182) }, // Drift slowly through Skills
-  
-  // CONTACT
-  { progress: 1.00, position: new THREE.Vector3(0, 0, -240) } // End of Contact
+  // Hero
+  { progress: 0.00, position: new THREE.Vector3(0,  0,  5) },
+  { progress: 0.07, position: new THREE.Vector3(0,  0,  5) },   // end of Hero
+  // Transition → About
+  { progress: 0.12, position: new THREE.Vector3(2,  0, -5) },   // through frame
+  { progress: 0.18, position: new THREE.Vector3(0,  0, -20) },  // About arrives
+  // DevSpace
+  { progress: 0.24, position: new THREE.Vector3(-2, 1, -30) },
+  // WORK — camera holds near z=-35 for the entire Work section (≈0.27→0.68)
+  // The project images animate toward the camera, not the camera toward them.
+  { progress: 0.27, position: new THREE.Vector3(0,  0, -35) },  // Work start
+  { progress: 0.68, position: new THREE.Vector3(0,  0, -36) },  // Work end (tiny drift)
+  // SKILLS / EXPERIENCE — hold near z=-180 (≈0.70→0.92)
+  { progress: 0.70, position: new THREE.Vector3(0, -2, -180) }, // Skills start
+  { progress: 0.92, position: new THREE.Vector3(0, -2, -181) }, // Skills end (tiny drift)
+  // Contact
+  { progress: 1.00, position: new THREE.Vector3(0,  0, -240) },
 ];
 
 export default function CameraRig() {
@@ -47,6 +46,9 @@ export default function CameraRig() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Pre-allocate vector to avoid garbage collection spikes in useFrame
+  const currentPos = useRef(new THREE.Vector3());
+
   useFrame((state, delta) => {
     // 1. Calculate global scroll progress (0 to 1) safely
     const currentScroll = window.scrollY || 0;
@@ -59,7 +61,7 @@ export default function CameraRig() {
     scrollY.current = currentScroll;
 
     // 2. Interpolate camera position based on keyframes
-    let currentPos = new THREE.Vector3();
+    currentPos.current.set(0, 0, 0);
     
     // Find which segment we are in
     let startIndex = 0;
@@ -72,7 +74,7 @@ export default function CameraRig() {
     
     // If we're at or past the end, clamp to the last keyframe
     if (globalProgress >= cameraKeyframes[cameraKeyframes.length - 1].progress) {
-      currentPos.copy(cameraKeyframes[cameraKeyframes.length - 1].position);
+      currentPos.current.copy(cameraKeyframes[cameraKeyframes.length - 1].position);
     } else {
       const startFrame = cameraKeyframes[startIndex];
       const endFrame = cameraKeyframes[startIndex + 1];
@@ -82,17 +84,17 @@ export default function CameraRig() {
       
       // Lerp position safely
       if (startFrame && endFrame) {
-        currentPos.lerpVectors(startFrame.position, endFrame.position, segmentProgress);
+        currentPos.current.lerpVectors(startFrame.position, endFrame.position, segmentProgress);
       }
     }
 
     // 3. Add subtle mouse reaction & velocity impact
     const velocityOffset = Math.min(Math.max(scrollVelocity.current * 0.05, -2), 2) || 0;
-    currentPos.x += mousePos.current.x * 0.5;
-    currentPos.y += mousePos.current.y * 0.5;
-    currentPos.z -= velocityOffset; // Move back slightly when scrolling fast
+    currentPos.current.x += mousePos.current.x * 0.5;
+    currentPos.current.y += mousePos.current.y * 0.5;
+    currentPos.current.z -= velocityOffset; // Move back slightly when scrolling fast
 
-    targetPosition.current.copy(currentPos);
+    targetPosition.current.copy(currentPos.current);
     
     // 4. Smoothly damp the camera position towards the target
     damp3(camera.position, targetPosition.current, 0.25, delta);
