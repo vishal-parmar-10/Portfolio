@@ -25,7 +25,7 @@ export default function About() {
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top 75%",
-            end: "center center",
+            end: "top 25%",
             scrub: 1,
           }
         }
@@ -36,15 +36,15 @@ export default function About() {
   }, []);
 
   return (
-    <section id="about" ref={containerRef} className="py-32 md:py-44 px-6 md:px-12 w-full h-full flex flex-col justify-center items-center text-center pointer-events-none">
-      
-      <h2 
-        ref={(el) => (textRefs.current[0] = el)}
-        className="font-display font-bold tracking-tighter uppercase text-[#F4F4F0] mb-12 pointer-events-auto"
-        style={{ fontSize: "clamp(4rem, 15vw, 12rem)", lineHeight: 0.85 }}
-      >
-        ABOUT
-      </h2>
+    <section id="about" ref={containerRef} className="w-full h-full relative pointer-events-none">
+      <div className="sticky top-0 w-full h-screen flex flex-col justify-center items-center text-center px-6 md:px-12 z-20">
+        <h2 
+          ref={(el) => (textRefs.current[0] = el)}
+          className="font-display font-bold tracking-tighter uppercase text-[#F4F4F0] mb-12 pointer-events-auto"
+          style={{ fontSize: "clamp(4rem, 15vw, 12rem)", lineHeight: 0.85 }}
+        >
+          ABOUT
+        </h2>
 
       <div className="max-w-2xl mx-auto space-y-8 pointer-events-auto">
         <p ref={(el) => (textRefs.current[1] = el)} className="font-sans text-xl md:text-3xl font-light text-[#F4F4F0] leading-relaxed">
@@ -64,7 +64,7 @@ export default function About() {
           <span>Web Designer</span>
         </div>
       </div>
-      
+      </div>
     </section>
   );
 }
