@@ -24,8 +24,8 @@ export default function About() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 75%",
-            end: "top 25%",
+            start: "top 80%",
+            end: "top 20%",
             scrub: 1,
           }
         }
